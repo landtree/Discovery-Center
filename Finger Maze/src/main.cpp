@@ -16,8 +16,8 @@
 #define ir8Pin 10 //Not used
 //Led defintions
 #define leds_Pin 11
-#define Num_leds 32
-#define numPerSec 4
+#define Num_leds 60
+#define numPerSec round(Num_leds/8)
 CRGB leds[Num_leds];
 
 
@@ -68,7 +68,7 @@ void setup()
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 2300);
 
   Serial.begin(115200);
-  while(!Serial);
+  //while(!Serial);
   senTimeout.setTime(senTime);
   gameTimeout.setTime(1000);
   checkSensor.setTime(300);
