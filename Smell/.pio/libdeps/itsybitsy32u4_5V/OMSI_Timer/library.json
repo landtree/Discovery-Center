@@ -1,0 +1,27 @@
+{
+  "name": "OMSI_Timer",
+  "version": "1.0.0",
+  "description": "A repackage of the MobaTools/MotoTimer.h to make compatabile with Teensy.",
+  "keywords": "timer,mobatools,MotoTimer",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/omsi-exhibits/Timer.git"
+  },
+  "authors":
+  [
+    {
+      "name": "Aaron De Lanty",
+      "email": "aDelanty@omsi.edu",
+	  "maintainer": true      
+    },
+    {
+      "name": "MicroBahner",
+      "url": "https://github.com/MicroBahner",
+	    "maintainer": false      
+    }
+  ],
+  "license": "GPL-3.0-or-later",  
+  "frameworks": "*",
+  "platforms": "*"
+}
