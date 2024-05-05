@@ -3,8 +3,6 @@
 int encodedScent = 000;
 int encodedImg = 000;
 
-void debug();
-
 int readScentIR(int encoded)
 { 
   //reads the bool of each encode ring
@@ -78,12 +76,37 @@ void setup() {
 
 }
 
+void printdebug()
+{
+
+  Serial.print("Fan Status: ");
+  if(fanOn == 1){Serial.println("Fan On");}else{Serial.println("Fan Off");}
+  delay(300);
+
+  Serial.println("**********************");
+  encodedScent = readImgIR(encodedScent);
+  Serial.print("Scent Encoder: ");
+  Serial.println(encodedScent);
+  delay(300);
+  Serial.println("**********************");
+  encodedImg = readScentIR(encodedImg);
+  Serial.print("Image Encoder: ");
+  Serial.println(encodedImg);
+  delay(300);
+  Serial.println("**********************");
+
+  Serial.println("Button Pressed: ");
+  if(startBtn.isPressed()){Serial.println("Pressed");}else{Serial.println("Not Pressed");}
+
+
+}
+
 
 void loop() 
 {
 
   #ifdef debug
-  debug();
+    printdebug();
   #endif
   startBtn.update();
 
@@ -120,26 +143,3 @@ void loop()
 
 
 
-void debug() 
-{
-
-  Serial.print("Fan Status: ");
-  if(fanOn == 1){Serial.println("Fan On");}else{Serial.println("Fan Off");}
-  delay(300);
-
-  Serial.println("**********************");
-  encodedScent = readImgIR(encodedScent);
-  Serial.print("Scent Encoder: ");
-  Serial.println(encodedScent);
-  delay(300);
-  Serial.println("**********************");
-  encodedImg = readScentIR(encodedImg);
-  Serial.print("Image Encoder: ");
-  Serial.println(encodedImg);
-  delay(300);
-  Serial.println("**********************");
-
-  Serial.println("Button Pressed: ");
-  if(startBtn.isPressed()){Serial.println("Pressed");}else{Serial.println("Not Pressed");}
-
-}

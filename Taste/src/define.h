@@ -24,6 +24,7 @@ CRGB tasteRings[totalLeds];
 #define color5 124, 252, 0
 
 
+
 //break into sections
 //sweet, savory, spicy, sour, salty
 CRGB* sweet = &tasteRings[0]; 
@@ -34,5 +35,9 @@ CRGB* salty = &tasteRings[(numPerRing * 4)];
 
 #define fade 25
 bool winTrigger = false;
-MoToTimer ledDelay,winTimer,fade1Timer,fade2Timer,fade3Timer,fade4Timer,fade5Timer, winTrigTimer;
+MoToTimer ledDelay,winTimer,fade1Timer,fade2Timer,fade3Timer,fade4Timer,fade5Timer, winTrigTimer,heartbeat;
 
+bool ir1,ir2,ir3,ir4,ir5;
+bool on = true;
+int ledPos = 0;
+#define debug

@@ -1,11 +1,9 @@
 #include <define.h>
 
-
-
-
 void setup() 
 
-{   Serial.begin(9600);
+{  
+   Serial.begin(9600);
   //create led strip
   FastLED.addLeds<NEOPIXEL, leds_Pin>(tasteRings, totalLeds);
   //restricts brightness
@@ -16,6 +14,7 @@ void setup()
   pinMode(ir3Pin, INPUT);
   pinMode(ir4Pin, INPUT);
   pinMode(ir5Pin, INPUT);
+  pinMode(13,OUTPUT);
 
   //Strip test
   fill_solid(tasteRings,totalLeds,CRGB::Red);
@@ -32,8 +31,19 @@ void setup()
 
 }
 
-bool ir1,ir2,ir3,ir4,ir5;
-byte ledPos =0;
+void heatpulse()
+{
+  if(!heartbeat.running())
+  {
+    on = !on;
+    digitalWrite(13,on);
+    heartbeat.setTime(500);
+    #ifdef debug
+    Serial.print("LED:");
+    Serial.println(on);
+    #endif
+  }
+}
 
 void readSesnor()
 {
@@ -43,19 +53,20 @@ void readSesnor()
   ir4 = !digitalRead(ir4Pin);
   ir5 = !digitalRead(ir5Pin);
 
-  // Serial.println("----------------------");
-  // Serial.print("Ir1: ");
-  // Serial.println(ir1);
-  // Serial.print("Ir2: ");
-  // Serial.println(ir2);
-  // Serial.print("Ir3: ");
-  // Serial.println(ir3);
-  // Serial.print("Ir4: ");
-  // Serial.println(ir4);
-  // Serial.print("Ir5: ");
-  // Serial.println(ir5);
-  // Serial.println("**********************");
-
+  #ifdef debug
+  Serial.println("----------------------");
+  Serial.print("Ir1: ");
+  Serial.println(ir1);
+  Serial.print("Ir2: ");
+  Serial.println(ir2);
+  Serial.print("Ir3: ");
+  Serial.println(ir3);
+  Serial.print("Ir4: ");
+  Serial.println(ir4);
+  Serial.print("Ir5: ");
+  Serial.println(ir5);
+  Serial.println("----------------------");
+  #endif
   
 
 }
@@ -63,7 +74,7 @@ void readSesnor()
 //sweet, savory, spicy, sour, salty
 void loop()
 {
-
+  heatpulse();
   readSesnor();
 
   //if any of the triggers hit, turn on the light based
@@ -146,7 +157,7 @@ void loop()
 if(ir1 && ir2 && ir3 && ir4 && ir5 && winTrigTimer.running())
   { 
 
-    winTimer.setTime(5000);
+    //winTimer.setTime(5000);
    do
    {
 
