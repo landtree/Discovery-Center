@@ -1,7 +1,7 @@
+//include libraries
 #include <Arduino.h>
 #include <FastLED.h>
 #include <Timer.h>
-
 
 //IR Definitions
 #define irStartPin 7
@@ -13,11 +13,12 @@
 #define ir5Pin 22 //texture 5
 #define ir6Pin 23 //texture 6
 #define ir7Pin 9 //EasterEgg
-#define ir8Pin 10 //Not used
-//Led defintions
+#define ir8Pin 10 //Not used currently
+
+//Led defintion for the full strip and break to sections
 #define leds_Pin 11
 #define Num_leds 60
-#define numPerSec round(Num_leds/8)
+#define numPerSec round(Num_leds/8) //sets the strip into number of sensors and rounds to fix any decimals
 CRGB leds[Num_leds];
 
 
@@ -31,12 +32,21 @@ CRGB* texture5 = &leds[(numPerSec * 5)];
 CRGB* texture6 = &leds[(numPerSec * 6)]; 
 CRGB* exitSection = &leds[(numPerSec * 7)];
 
+//create timers
 MoToTimer senTimeout,ledTimeout, gameTimeout,checkSensor,beat,winTimer;
 
+//define time
 #define gameTime 30000
 #define senTime 500
 
+//create flags
 bool senTriggered,beaton,secOn;
+bool gameOn;
+uint8_t lastSensor, currentSensor;
+
+int ledRain = 0;
+bool rainDir = 1;
+uint8_t c1;
 
 void heartbeat()
 {
@@ -67,33 +77,30 @@ void setup()
   //restricts brightness
   FastLED.setMaxPowerInVoltsAndMilliamps(5, 2300);
 
-  Serial.begin(115200);
-  //while(!Serial);
+  Serial.begin(9600);
+  //while(!Serial); turn of to wait to connect
   senTimeout.setTime(senTime);
   gameTimeout.setTime(1000);
   checkSensor.setTime(300);
 
   //test LEDs
-fill_solid(leds,Num_leds,CRGB::Red);
-FastLED.show();
-delay(1000);
-fill_solid(leds,Num_leds,CRGB::Green);
-FastLED.show();
-delay(1000);
-fill_solid(leds,Num_leds,CRGB::Blue);
-FastLED.show();
-delay(1000);
-fill_solid(leds,Num_leds,CRGB::Black);
-FastLED.show();
+  fill_solid(leds,Num_leds,CRGB::Red);
+  FastLED.show();
+  delay(1000);
+  fill_solid(leds,Num_leds,CRGB::Green);
+  FastLED.show();
+  delay(1000);
+  fill_solid(leds,Num_leds,CRGB::Blue);
+  FastLED.show();
+  delay(1000);
+  fill_solid(leds,Num_leds,CRGB::Black);
+  FastLED.show();
 }
-
-bool gameOn;
-byte lastSensor, currentSensor;
-
 
 void reset()
 {
-  gameOn =0;
+  //turn off game and set LEDs black
+  gameOn = 0; 
   fill_solid(leds,Num_leds,CRGB::Black);
   FastLED.show();
 }
@@ -104,7 +111,7 @@ winTimer.setTime(8000);
 fill_solid(leds,Num_leds,CRGB::Black);
 FastLED.show();
 
-byte int1 =0, int2=Num_leds, hue=0;
+uint8_t int1 =0, int2=Num_leds, hue=0;
 
 do
 {
@@ -135,9 +142,6 @@ reset();
 
 }
 
-int ledRain = 0;
-bool rainDir = 1;
-byte c1;
 void attractor()
 {
   if(!ledTimeout.running())
@@ -378,6 +382,7 @@ void loop()
     {
       //enter wavTrigger 
     }
+    
     //Check the direction and update lights
     if(lastSensor >= currentSensor && lastSensor != currentSensor && senTriggered)
     {

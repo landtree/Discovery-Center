@@ -3,7 +3,13 @@
 void setup() 
 
 {  
-   Serial.begin(9600);
+  //start serial
+  Serial.begin(9600);
+
+  //uncomment to force the uController to wait 
+  //until serial connects, comment out to autostart
+  //while(!Serial);
+
   //create led strip
   FastLED.addLeds<NEOPIXEL, leds_Pin>(tasteRings, totalLeds);
   //restricts brightness
@@ -17,6 +23,7 @@ void setup()
   pinMode(13,OUTPUT);
 
   //Strip test
+  //Changes all LEDs r/g/b to test
   fill_solid(tasteRings,totalLeds,CRGB::Red);
   FastLED.show();
   delay(1000);
@@ -31,7 +38,7 @@ void setup()
 
 }
 
-void heatpulse()
+void heartpulse()
 {
   if(!heartbeat.running())
   {
@@ -47,6 +54,7 @@ void heatpulse()
 
 void readSesnor()
 {
+  //gate the sesnors, makes it easier to flip logic
   ir1 = !digitalRead(ir1Pin);
   ir2 = !digitalRead(ir2Pin);
   ir3 = !digitalRead(ir3Pin);
@@ -74,11 +82,14 @@ void readSesnor()
 //sweet, savory, spicy, sour, salty
 void loop()
 {
-  heatpulse();
+  //blink on board led, used as a quick check that it is looping
+  heartpulse();
+
+  //read & update all the sensors 
   readSesnor();
 
   //if any of the triggers hit, turn on the light based
-  //one the proper color
+  //on the proper color
 
   if(ir1)
   {
@@ -137,8 +148,6 @@ void loop()
     }
   }
 
-
-
   if(ir5)
   {
     fill_solid(salty,numPerRing,CRGB(color5));
@@ -157,7 +166,7 @@ void loop()
 if(ir1 && ir2 && ir3 && ir4 && ir5 && winTrigTimer.running())
   { 
 
-    //winTimer.setTime(5000);
+    winTimer.setTime(5000);
    do
    {
 
