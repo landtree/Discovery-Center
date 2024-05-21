@@ -13,7 +13,7 @@ void setup()
   //create led strip
   FastLED.addLeds<NEOPIXEL, leds_Pin>(tasteRings, totalLeds);
   //restricts brightness
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 2300);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 2000);
 
   pinMode(ir1Pin, INPUT);
   pinMode(ir2Pin, INPUT);
@@ -55,11 +55,11 @@ void heartpulse()
 void readSesnor()
 {
   //gate the sesnors, makes it easier to flip logic
-  ir1 = !digitalRead(ir1Pin);
-  ir2 = !digitalRead(ir2Pin);
-  ir3 = !digitalRead(ir3Pin);
-  ir4 = !digitalRead(ir4Pin);
-  ir5 = !digitalRead(ir5Pin);
+  ir1 = digitalRead(ir1Pin);
+  ir2 = digitalRead(ir2Pin);
+  ir3 = digitalRead(ir3Pin);
+  ir4 = digitalRead(ir4Pin);
+  ir5 = digitalRead(ir5Pin);
 
   #ifdef debug
   Serial.println("----------------------");
@@ -76,7 +76,41 @@ void readSesnor()
   Serial.println("----------------------");
   #endif
   
+}
 
+void setTriggers()
+{
+  //set the triggers true if it has been trigger once
+  if(ir1)
+  {
+    ir1T = true;
+  }
+  if(ir2)
+  {
+    ir2T = true;
+  }
+  if(ir3)
+  {
+    ir3T = true;
+  }
+  if(ir4)
+  {
+    ir4T = true;
+  }
+  if(ir5)
+  {
+    ir5T = true;
+  }
+}
+
+void reset()
+{
+  ir1T = false;
+  ir2T = false;
+  ir3T = false;
+  ir4T = false;
+  ir5T = false;
+  resetTimer.setTime(60000);
 }
 
 //sweet, savory, spicy, sour, salty
@@ -84,10 +118,15 @@ void loop()
 {
   //blink on board led, used as a quick check that it is looping
   heartpulse();
-
   //read & update all the sensors 
   readSesnor();
-
+  //update perm trigger
+  setTriggers();
+  //check to see if the timeout triggerd
+  if(!resetTimer.running())
+  {
+    reset();
+  }
   //if any of the triggers hit, turn on the light based
   //on the proper color
 
@@ -95,81 +134,40 @@ void loop()
   {
     //RGB
     fill_solid(sweet,numPerRing,CRGB(color1));
-    winTrigTimer.setTime(2000);
-  }else
-  {
-    if(!fade1Timer.running())
-    {
-    fadeToBlackBy(sweet,numPerRing,50);
-    fade1Timer.setTime(fade);
-    }
-  }
-  
-    if(ir2)
+     resetTimer.setTime(60000);
+  }  
+  if(ir2)
   { 
 
     fill_solid(savory,numPerRing,CRGB(color2));
-    winTrigTimer.setTime(2000);
-  }else
-  {
-    if(!fade2Timer.running())
-    {
-    fadeToBlackBy(savory,numPerRing,50);
-    fade2Timer.setTime(fade);
-    }
+    resetTimer.setTime(60000);
   }
-
-    if(ir3)
+  if(ir3)
   {
     fill_solid(spicy,numPerRing,CRGB(color3));
-    winTrigTimer.setTime(2000);
-  }else
-  {
-    if(!fade3Timer.running())
-    {
-    fadeToBlackBy(spicy,numPerRing,50);
-    fade3Timer.setTime(fade);
+    resetTimer.setTime(60000);
 
-    }
   }
-
-
-    if(ir4)
+  if(ir4)
   {
-    //fill_solid(sour,numPerRing,CHSV(163, 35, 58));
     fill_solid(sour,numPerRing,CRGB(color4));
-    winTrigTimer.setTime(2000);
-  }else
-  {
-    if(!fade4Timer.running())
-    {
-    fadeToBlackBy(sour,numPerRing,50);
-    fade4Timer.setTime(fade);
-    }
+    resetTimer.setTime(60000);
   }
-
-  if(ir5)
+   if(ir5)
   {
     fill_solid(salty,numPerRing,CRGB(color5));
-    winTrigTimer.setTime(2000);
-  }else
-  {
-    if(!fade5Timer.running())
-    {
-    fadeToBlackBy(salty,numPerRing,50);
-    fade5Timer.setTime(fade);
-    }
+    resetTimer.setTime(60000);
   }
 
-
-
-if(ir1 && ir2 && ir3 && ir4 && ir5 && winTrigTimer.running())
+if(ir1T && ir2T && ir3T && ir4T && ir5T)
   { 
 
     winTimer.setTime(5000);
+    //set to black before starting effects
+    fill_solid(tasteRings,totalLeds,CRGB::Black);
+    FastLED.show();
    do
    {
-
       //small little win sequence
       if(!ledDelay.running())
       {
@@ -198,7 +196,7 @@ if(ir1 && ir2 && ir3 && ir4 && ir5 && winTrigTimer.running())
       }
 
    } while (winTimer.running());
-
+    reset();
   }
 
   FastLED.show();

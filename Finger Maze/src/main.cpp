@@ -283,8 +283,16 @@ void loop()
    if(!gameOn && !senTimeout.running())
   {
     bool startDetect = digitalRead(irStartPin);
-    
-    if(!startDetect)
+      detect1 = !digitalRead(ir1Pin);
+      detect2 = !digitalRead(ir2Pin);
+      detect3 = !digitalRead(ir3Pin);
+      detect4 = !digitalRead(ir4Pin);
+      detect5 = !digitalRead(ir5Pin);
+      detect6 = !digitalRead(ir6Pin);
+      exitDetect = !digitalRead(irExitPin);
+      easterEgg = !digitalRead(ir7Pin);
+      
+    if(!startDetect||detect1||detect2||detect3||detect4||detect5||detect6||exitDetect||easterEgg)
     {
       gameOn = !gameOn;
       Serial.println("start");
@@ -302,14 +310,14 @@ void loop()
     if(!checkSensor.running())
     {
       senTriggered = false;
-      detect1 = digitalRead(ir1Pin);
-      detect2 = digitalRead(ir2Pin);
-      detect3 = digitalRead(ir3Pin);
-      detect4 = digitalRead(ir4Pin);
-      detect5 = digitalRead(ir5Pin);
-      detect6 = digitalRead(ir6Pin);
-      exitDetect = digitalRead(irExitPin);
-      easterEgg = digitalRead(ir7Pin);
+      detect1 = !digitalRead(ir1Pin);
+      detect2 = !digitalRead(ir2Pin);
+      detect3 = !digitalRead(ir3Pin);
+      detect4 = !digitalRead(ir4Pin);
+      detect5 = !digitalRead(ir5Pin);
+      detect6 = !digitalRead(ir6Pin);
+      exitDetect = !digitalRead(irExitPin);
+      easterEgg = !digitalRead(ir7Pin);
     }
 
 

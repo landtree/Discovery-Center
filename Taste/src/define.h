@@ -35,12 +35,13 @@ CRGB* salty = &tasteRings[(numPerRing * 4)];
 
 //set the timers
 #define fade 25
-MoToTimer ledDelay,winTimer,fade1Timer,fade2Timer,fade3Timer,fade4Timer,fade5Timer, winTrigTimer,heartbeat;
+MoToTimer ledDelay,winTimer,resetTimer,heartbeat;
 
 //set all the flags
 //defaults to false
 bool winTrigger = false;
 bool ir1,ir2,ir3,ir4,ir5;
+bool ir1T,ir2T,ir3T,ir4T,ir5T;
 bool on = true;
 int ledPos = 0;
 
