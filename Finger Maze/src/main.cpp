@@ -302,6 +302,7 @@ void loop()
 
     if(startDetect||detect1||detect2||detect3||detect4||detect5||exitDetect||easterEgg)
     {
+      fill_solid(leds,Num_leds,CRGB::Black);
       gameOn = !gameOn;
       Serial.println("start");
       currentSensor = 0;
