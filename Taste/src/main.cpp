@@ -110,6 +110,7 @@ void reset()
   ir3T = false;
   ir4T = false;
   ir5T = false;
+  fill_solid(tasteRings,totalLeds,CRGB::Black);
   resetTimer.setTime(60000);
 }
 
@@ -166,6 +167,7 @@ if(ir1T && ir2T && ir3T && ir4T && ir5T)
     //set to black before starting effects
     fill_solid(tasteRings,totalLeds,CRGB::Black);
     FastLED.show();
+
    do
    {
       //small little win sequence
@@ -198,6 +200,7 @@ if(ir1T && ir2T && ir3T && ir4T && ir5T)
    } while (winTimer.running());
     reset();
   }
+  
 
   FastLED.show();
 
