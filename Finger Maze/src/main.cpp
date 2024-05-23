@@ -46,12 +46,11 @@ bool gameOn;
 bool detect1,detect2 ,detect3 ,detect4 ,detect5,detect6,exitDetect,easterEgg;  
 
 uint8_t lastSensor, currentSensor;
+uint8_t int1 =0, int2=Num_leds, hue=0;
 
 int ledRain = 0;
 bool rainDir = 1;
 uint8_t c1;
-
-
 
 void heartbeat()
 {
@@ -118,7 +117,7 @@ winTimer.setTime(8000);
 fill_solid(leds,Num_leds,CRGB::Black);
 FastLED.show();
 
-uint8_t int1 =0, int2=Num_leds, hue=0;
+
 
 do
 {
@@ -272,7 +271,7 @@ void loop()
 
    if(!gameOn && !senTimeout.running())
   {
-    bool startDetect = digitalRead(irStartPin);
+      bool startDetect = !digitalRead(irStartPin);
       detect1 = !digitalRead(ir1Pin);
       detect2 = !digitalRead(ir2Pin);
       detect3 = !digitalRead(ir3Pin);
@@ -282,12 +281,12 @@ void loop()
       exitDetect = !digitalRead(irExitPin);
       easterEgg = !digitalRead(ir7Pin);
       
-    if(!startDetect||detect1||detect2||detect3||detect4||detect5||detect6||exitDetect||easterEgg)
+    if(startDetect||detect1||detect2||detect3||detect4||detect5||detect6||exitDetect||easterEgg)
     {
       gameOn = !gameOn;
       Serial.println("start");
       currentSensor = 0;
-      secOn =1;
+      secOn= 1;
       senTimeout.restart();
     }
     
