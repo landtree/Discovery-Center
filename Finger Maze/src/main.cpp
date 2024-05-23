@@ -18,7 +18,7 @@
 //Led defintion for the full strip and break to sections
 #define leds_Pin 11
 #define Num_leds 60
-#define numPerSec round(Num_leds/8) //sets the strip into number of sensors and rounds to fix any decimals
+#define numPerSec 8  //sets the strip into number of sensors and rounds to fix any decimals
 CRGB leds[Num_leds];
 
 
@@ -115,11 +115,9 @@ void reset()
 void win()
 {
 Serial.println("Win");
-winTimer.setTime(8000);
+winTimer.setTime(12000);
 fill_solid(leds,Num_leds,CRGB::Black);
 FastLED.show();
-
-
 
 do
 {
@@ -287,7 +285,7 @@ void loop()
 
       Serial.print("Sensors trigging game start:");
       Serial.print(" Start:");
-      Serial.print(startDetect);
+      Serial.println(startDetect);
 
     if(startDetect)
     {
