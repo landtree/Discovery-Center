@@ -46,7 +46,7 @@ bool gameOn;
 bool startDetect, detect1,detect2 ,detect3 ,detect4 ,detect5,detect6,exitDetect,easterEgg;   
 
 uint8_t lastSensor, currentSensor;
-uint8_t int1 =0, int2=Num_leds, hue=0;
+uint8_t int1 = 0, int2=Num_leds, hue=0;
 
 int ledRain = 0;
 bool rainDir = 1;

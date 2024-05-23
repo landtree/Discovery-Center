@@ -18,6 +18,9 @@ int readScentIR(int encoded)
   bitWrite(encodedScent,0,ir1);
   bitWrite(encodedScent,1,ir2);
   bitWrite(encodedScent,2,ir3);
+  Serial.print("Scent:");
+  Serial.println(encodedScent);
+  delay(1000);
   encoded = encodedScent;
   return encoded;
 }
@@ -38,6 +41,11 @@ int readImgIR(int encoded)
   bitWrite(encodedImg,0,0);
   bitWrite(encodedImg,1,0);
   bitWrite(encodedImg,2,0);
+
+  Serial.print("Image:");
+  Serial.println(encodedImg);
+  delay(1000);
+
   encoded = encodedImg;
   return encoded;
 }
@@ -108,8 +116,9 @@ void loop()
 {
 
   #ifdef debug
-    printdebug();
+    //printdebug();
   #endif
+
   startBtn.update();
 
   if(startBtn.pressed() && !buttonTimer.running())
