@@ -2,3 +2,6 @@
 Smell/.pio/build/itsybitsy32u4_5V/.sconsign311.dblite
 Smell/.pio/build/itsybitsy32u4_5V/firmware.elf
 Smell/.pio/build/itsybitsy32u4_5V/firmware.hex
+*.hex
+*.elf
+*.dblite
