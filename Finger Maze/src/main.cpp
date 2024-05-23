@@ -18,7 +18,7 @@
 //Led defintion for the full strip and break to sections
 #define leds_Pin 11
 #define Num_leds 60
-#define numPerSec 8  //sets the strip into number of sensors and rounds to fix any decimals
+#define numPerSec round(Num_leds/6)  //sets the strip into number of sensors and rounds to fix any decimals
 CRGB leds[Num_leds];
 
 
@@ -30,7 +30,7 @@ CRGB* texture3 = &leds[(numPerSec * 3)];
 CRGB* texture4 = &leds[(numPerSec * 4)]; 
 CRGB* texture5 = &leds[(numPerSec * 5)]; 
 CRGB* texture6 = &leds[(numPerSec * 6)]; 
-CRGB* exitSection = &leds[(numPerSec * 7)];
+//CRGB* exitSection = &leds[(numPerSec * 7)];
 
 //create timers
 MoToTimer senTimeout,ledTimeout, gameTimeout,checkSensor,beat,winTimer;
@@ -247,24 +247,25 @@ void updateProgressbar(byte Section, bool on)
     case 6:
       if(on)
       {
-        fill_solid(texture6, numPerSec,CHSV(217,255,255));
-        FastLED.show();       
+        fill_solid(texture6, numPerSec, CHSV(217,255,255));
+        FastLED.show();        
       }else
       {
         fill_solid(texture6, numPerSec, CRGB::Black);
         FastLED.show(); 
       }
+
     break;
 
     case 7:
     if(on)
     {
-    fill_solid(exitSection, numPerSec,CHSV(255,255,255));
+    //fill_solid(exitSection, numPerSec,CHSV(255,255,255));
     FastLED.show();
     win();        
     }else
     {
-    fill_solid(exitSection, numPerSec, CRGB::Black);
+    //fill_solid(exitSection, numPerSec, CRGB::Black);
     FastLED.show(); 
     }
     break;  
@@ -313,7 +314,6 @@ void loop()
       detect4 = digitalRead(ir4Pin);
       detect5 = digitalRead(ir5Pin);
       exitDetect = digitalRead(irExitPin);
-      easterEgg = digitalRead(ir7Pin);
     }
 
 
@@ -324,8 +324,7 @@ void loop()
       Serial.println("Sensor 1 triggered!");
       senTimeout.restart();
       senTriggered = true;
-      currentSensor = 1;
-      
+      currentSensor = 1;      
     }
 
     if(detect2 && !senTimeout.running())
@@ -335,8 +334,7 @@ void loop()
       Serial.println("Sensor 2 triggered!");
       senTimeout.restart();
       senTriggered = true;
-      currentSensor = 2;
-      
+      currentSensor = 2;      
     }
 
     if(detect3 && !senTimeout.running())
@@ -376,7 +374,7 @@ void loop()
       Serial.println("Exit triggered!");
       senTimeout.restart();
       senTriggered = true;
-      currentSensor = 7;
+      currentSensor = 6;
     }
     
     //Check the direction and update lights
