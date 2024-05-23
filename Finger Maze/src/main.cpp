@@ -368,7 +368,7 @@ void loop()
       currentSensor = 5;
     }
 
-    if(exitDetect && !senTimeout.running() && lastSensor == 5)
+    if(exitDetect && !senTimeout.running() && currentSensor == 5)
     {
       checkSensor.setTime(75);
       lastSensor = currentSensor;
