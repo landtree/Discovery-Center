@@ -6,9 +6,9 @@ int encodedImg = 000;
 int readScentIR(int encoded)
 { 
   //reads the bool of each encode ring
-  bool ir1 = !digitalRead(encode1); 
-  bool ir2 = !digitalRead(encode2);
-  bool ir3 = !digitalRead(encode3);
+  bool ir1 = digitalRead(encode1); 
+  bool ir2 = digitalRead(encode2);
+  bool ir3 = digitalRead(encode3);
 
   if(ir1 || ir2 || ir3)
   {
@@ -28,9 +28,9 @@ int readScentIR(int encoded)
 int readImgIR(int encoded)
 {
   //reads the bool of each encode ring
-  bool ir4 = !digitalRead(encode4); 
-  bool ir5 = !digitalRead(encode5);
-  bool ir6 = !digitalRead(encode6);
+  bool ir4 = digitalRead(encode4); 
+  bool ir5 = digitalRead(encode5);
+  bool ir6 = digitalRead(encode6);
 
     if(ir4 || ir5 || ir6)
   {
