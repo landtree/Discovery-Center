@@ -17,7 +17,7 @@
 
 //Led defintion for the full strip and break to sections
 #define leds_Pin 11
-#define Num_leds 60
+#define Num_leds 144
 #define numPerSec round(Num_leds/8) //sets the strip into number of sensors and rounds to fix any decimals
 CRGB leds[Num_leds];
 
