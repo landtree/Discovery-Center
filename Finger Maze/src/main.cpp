@@ -17,7 +17,7 @@
 
 //Led defintion for the full strip and break to sections
 #define leds_Pin 11
-#define Num_leds 144
+#define Num_leds 60
 #define numPerSec round(Num_leds/6) //sets the strip into number of sensors and rounds to fix any decimals
 CRGB leds[Num_leds];
 
@@ -303,7 +303,7 @@ void loop()
     if(startDetect||detect1||detect2||detect3||detect4||detect5||exitDetect||easterEgg)
     {
       fill_solid(leds,Num_leds,CRGB::Black);
-      gameOn = !gameOn;
+      gameOn = false;
       Serial.println("start");
       currentSensor = 0;
       secOn= 1;
@@ -343,7 +343,7 @@ void loop()
 
     if(detect2 && !senTimeout.running())
     {
-            checkSensor.setTime(75);
+      checkSensor.setTime(75);
       lastSensor = currentSensor;
       Serial.println("Sensor 2 triggered!");
       senTimeout.restart();
@@ -354,7 +354,7 @@ void loop()
 
     if(detect3 && !senTimeout.running())
     {
-            checkSensor.setTime(75);
+      checkSensor.setTime(75);
       lastSensor = currentSensor;
       Serial.println("Sensor 3 triggered!");
       senTimeout.restart();
@@ -364,7 +364,7 @@ void loop()
 
     if(detect4 && !senTimeout.running())
     {
-            checkSensor.setTime(75);
+      checkSensor.setTime(75);
       lastSensor = currentSensor;
       Serial.println("Sensor 4 triggered!");
       senTimeout.restart();
@@ -374,7 +374,7 @@ void loop()
 
     if(detect5 && !senTimeout.running())
     {
-            checkSensor.setTime(75);
+      checkSensor.setTime(75);
       lastSensor = currentSensor;
       Serial.println("Sensor 5 triggered!");
       senTimeout.restart();
@@ -384,7 +384,7 @@ void loop()
 
     if(exitDetect && !senTimeout.running() && lastSensor == 5)
     {
-            checkSensor.setTime(75);
+      checkSensor.setTime(75);
       lastSensor = currentSensor;
       Serial.println("Exit triggered!");
       senTimeout.restart();
