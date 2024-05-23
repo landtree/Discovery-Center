@@ -18,7 +18,7 @@
 //Led defintion for the full strip and break to sections
 #define leds_Pin 11
 #define Num_leds 144
-#define numPerSec round(Num_leds/8) //sets the strip into number of sensors and rounds to fix any decimals
+#define numPerSec round(Num_leds/6) //sets the strip into number of sensors and rounds to fix any decimals
 CRGB leds[Num_leds];
 
 
@@ -30,7 +30,7 @@ CRGB* texture3 = &leds[(numPerSec * 3)];
 CRGB* texture4 = &leds[(numPerSec * 4)]; 
 CRGB* texture5 = &leds[(numPerSec * 5)]; 
 CRGB* texture6 = &leds[(numPerSec * 6)]; 
-CRGB* exitSection = &leds[(numPerSec * 7)];
+CRGB* exitSection = &leds[(numPerSec * 6)];
 
 //create timers
 MoToTimer senTimeout,ledTimeout, gameTimeout,checkSensor,beat,winTimer;
@@ -51,6 +51,8 @@ int ledRain = 0;
 bool rainDir = 1;
 uint8_t c1;
 
+
+
 void heartbeat()
 {
   if(beaton)
@@ -59,6 +61,8 @@ void heartbeat()
     beaton = !beaton;
   }else{digitalWrite(13, LOW);beaton = !beaton;}
 }
+
+
 void setup() 
 {
   //set pinmodes
@@ -84,7 +88,7 @@ void setup()
   //while(!Serial); turn of to wait to connect
   senTimeout.setTime(senTime);
   gameTimeout.setTime(1000);
-  checkSensor.setTime(300);
+  checkSensor.setTime(150);
 
   //test LEDs
   fill_solid(leds,Num_leds,CRGB::Red);
@@ -158,7 +162,6 @@ void attractor()
   }
   fill_rainbow_circular(leds,ledRain,c1);
   FastLED.show();
-
 }
 
 void updateProgressbar(byte Section, bool on)
@@ -266,6 +269,7 @@ void loop()
 {
 
   if(!beat.running()){heartbeat();beat.setTime(300);}
+
    if(!gameOn && !senTimeout.running())
   {
     bool startDetect = digitalRead(irStartPin);
@@ -301,7 +305,7 @@ void loop()
       detect3 = !digitalRead(ir3Pin);
       detect4 = !digitalRead(ir4Pin);
       detect5 = !digitalRead(ir5Pin);
-      detect6 = !digitalRead(ir6Pin);
+      //detect6 = !digitalRead(ir6Pin);
       exitDetect = !digitalRead(irExitPin);
       easterEgg = !digitalRead(ir7Pin);
     }
@@ -391,7 +395,7 @@ void loop()
       Serial.println("Moved Forward");
     }
 
-        if(senTriggered)
+    if(senTriggered)
     {
         Serial.print("Current Sensor: ");
         Serial.println(currentSensor);
