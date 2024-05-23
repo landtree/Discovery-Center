@@ -272,38 +272,29 @@ void loop()
    if(!gameOn && !senTimeout.running())
   {
       startDetect = digitalRead(irStartPin);
-      detect1 = digitalRead(ir1Pin);
-      detect2 = digitalRead(ir2Pin);
-      detect3 = digitalRead(ir3Pin);
-      detect4 = digitalRead(ir4Pin);
-      detect5 = digitalRead(ir5Pin);
-      //detect6 = !digitalRead(ir6Pin);
-      exitDetect = digitalRead(irExitPin);
-      easterEgg = digitalRead(ir7Pin);
-      
+
       Serial.print("Sensors trigging game start:");
       Serial.print(" Start:");
       Serial.print(startDetect);
-      Serial.print("| 1:");
-      Serial.print(detect1);      
-      Serial.print("| 2:");
-      Serial.print(detect2);   
-      Serial.print("| 3:");
-      Serial.print(detect3);   
-      Serial.print("| 4:");
-      Serial.print(detect4);   
-      Serial.print("| 5:");
-      Serial.print(detect5);   
-      Serial.print("| Exit:");
-      Serial.print(exitDetect);   
-      Serial.print("| EE:");
-      Serial.println(easterEgg);   
+      // Serial.print("| 1:");
+      // Serial.print(detect1);      
+      // Serial.print("| 2:");
+      // Serial.print(detect2);   
+      // Serial.print("| 3:");
+      // Serial.print(detect3);   
+      // Serial.print("| 4:");
+      // Serial.print(detect4);   
+      // Serial.print("| 5:");
+      // Serial.print(detect5);   
+      // Serial.print("| Exit:");
+      // Serial.print(exitDetect);   
+      // Serial.print("| EE:");
+      // Serial.println(easterEgg);   
 
-
-    if(startDetect||detect1||detect2||detect3||detect4||detect5||exitDetect||easterEgg)
+    if(startDetect)
     {
       fill_solid(leds,Num_leds,CRGB::Black);
-      gameOn = false;
+      gameOn = true;
       Serial.println("start");
       currentSensor = 0;
       secOn= 1;
