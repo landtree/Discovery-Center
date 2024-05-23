@@ -277,11 +277,11 @@ void loop()
       detect3 = !digitalRead(ir3Pin);
       detect4 = !digitalRead(ir4Pin);
       detect5 = !digitalRead(ir5Pin);
-      detect6 = !digitalRead(ir6Pin);
+      //detect6 = !digitalRead(ir6Pin);
       exitDetect = !digitalRead(irExitPin);
       easterEgg = !digitalRead(ir7Pin);
       
-    if(startDetect||detect1||detect2||detect3||detect4||detect5||detect6||exitDetect||easterEgg)
+    if(startDetect||detect1||detect2||detect3||detect4||detect5||exitDetect||easterEgg)
     {
       gameOn = !gameOn;
       Serial.println("start");
