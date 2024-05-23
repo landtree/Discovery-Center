@@ -315,22 +315,23 @@ void loop()
 
   if(gameOn)
   {
+
     if(!checkSensor.running())
     {
       senTriggered = false;
-      detect1 = !digitalRead(ir1Pin);
-      detect2 = !digitalRead(ir2Pin);
-      detect3 = !digitalRead(ir3Pin);
-      detect4 = !digitalRead(ir4Pin);
-      detect5 = !digitalRead(ir5Pin);
-      //detect6 = !digitalRead(ir6Pin);
-      exitDetect = !digitalRead(irExitPin);
-      easterEgg = !digitalRead(ir7Pin);
+      detect1 = digitalRead(ir1Pin);
+      detect2 = digitalRead(ir2Pin);
+      detect3 = digitalRead(ir3Pin);
+      detect4 = digitalRead(ir4Pin);
+      detect5 = digitalRead(ir5Pin);
+      exitDetect = digitalRead(irExitPin);
+      easterEgg = digitalRead(ir7Pin);
     }
 
 
     if(detect1 && !senTimeout.running())
     {
+      checkSensor.setTime(75);
       lastSensor = currentSensor;
       Serial.println("Sensor 1 triggered!");
       senTimeout.restart();
@@ -341,6 +342,7 @@ void loop()
 
     if(detect2 && !senTimeout.running())
     {
+            checkSensor.setTime(75);
       lastSensor = currentSensor;
       Serial.println("Sensor 2 triggered!");
       senTimeout.restart();
@@ -351,6 +353,7 @@ void loop()
 
     if(detect3 && !senTimeout.running())
     {
+            checkSensor.setTime(75);
       lastSensor = currentSensor;
       Serial.println("Sensor 3 triggered!");
       senTimeout.restart();
@@ -360,6 +363,7 @@ void loop()
 
     if(detect4 && !senTimeout.running())
     {
+            checkSensor.setTime(75);
       lastSensor = currentSensor;
       Serial.println("Sensor 4 triggered!");
       senTimeout.restart();
@@ -369,6 +373,7 @@ void loop()
 
     if(detect5 && !senTimeout.running())
     {
+            checkSensor.setTime(75);
       lastSensor = currentSensor;
       Serial.println("Sensor 5 triggered!");
       senTimeout.restart();
@@ -376,28 +381,15 @@ void loop()
       currentSensor = 5;
     }
 
-    // if(detect6 && !senTimeout.running())
-    // {
-    //   lastSensor = currentSensor;
-    //   Serial.println("Sensor 6 triggered!");
-    //   senTimeout.restart();
-    //   senTriggered = true;
-    //   currentSensor = 6;
-    // }
-
     if(exitDetect && !senTimeout.running() && lastSensor == 5)
     {
+            checkSensor.setTime(75);
       lastSensor = currentSensor;
       Serial.println("Exit triggered!");
       senTimeout.restart();
       senTriggered = true;
       currentSensor = 7;
     }
-
-    // if(!easterEgg && !senTimeout.running())
-    // {
-    //   //enter wavTrigger 
-    // }
     
     //Check the direction and update lights
     if(lastSensor >= currentSensor && lastSensor != currentSensor && senTriggered)
@@ -413,7 +405,7 @@ void loop()
       Serial.println("Moved Forward");
     }
 
-    if(senTriggered)
+    if(senTriggered && !checkSensor.running())
     {
         Serial.print("Current Sensor: ");
         Serial.println(currentSensor);
