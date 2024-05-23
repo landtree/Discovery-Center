@@ -18,6 +18,7 @@ int readScentIR(int encoded)
   bitWrite(encodedScent,0,ir1);
   bitWrite(encodedScent,1,ir2);
   bitWrite(encodedScent,2,ir3);
+  encoded = encodedScent;
   return encoded;
 }
 
@@ -34,9 +35,10 @@ int readImgIR(int encoded)
   }
 
   //write the bits to update encoded signal
-  bitWrite(encodedScent,0,0);
-  bitWrite(encodedScent,1,0);
-  bitWrite(encodedScent,2,0);
+  bitWrite(encodedImg,0,0);
+  bitWrite(encodedImg,1,0);
+  bitWrite(encodedImg,2,0);
+  encoded = encodedImg;
   return encoded;
 }
 
