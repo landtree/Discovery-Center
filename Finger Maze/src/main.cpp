@@ -81,8 +81,8 @@ void setup()
   //create led strip
   FastLED.addLeds<NEOPIXEL, leds_Pin>(leds, Num_leds).setCorrection( TypicalSMD5050 );
   //restricts brightness
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 2000);
-
+  //FastLED.setMaxPowerInVoltsAndMilliamps(5, 2000);
+  FastLED.setBrightness(155);
   Serial.begin(9600);
   //while(!Serial); turn of to wait to connect
   senTimeout.setTime(senTime);

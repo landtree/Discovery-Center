@@ -116,7 +116,7 @@ void loop()
 {
 
   #ifdef debug
-    //printdebug();
+    printdebug();
   #endif
 
   startBtn.update();
