@@ -36,7 +36,7 @@ CRGB* texture6 = &leds[(numPerSec * 6)];
 MoToTimer senTimeout,ledTimeout, gameTimeout,checkSensor,beat,winTimer;
 
 //define time
-#define gameTime 60000
+#define gameTime 30000
 #define senTime 75
 
 //create flags
@@ -110,6 +110,7 @@ void reset()
   gameOn = 0; 
   fill_solid(leds,Num_leds,CRGB::Black);
   FastLED.show();
+  gameTimeout.setTime(gameTime);
 }
 
 void win()
@@ -145,7 +146,8 @@ do
 } while (winTimer.running());
 
 reset();
-
+fill_solid(leds,Num_leds,CRGB::Black);
+ledRain = 0;
 
 }
 
@@ -279,6 +281,11 @@ void updateProgressbar(byte Section, bool on)
 void loop() 
 {
 
+  if(!gameTimeout.running())
+  {
+    reset();
+  }
+
   if(!beat.running()){heartbeat();beat.setTime(300);}
 
    if(!gameOn && !senTimeout.running())
@@ -325,7 +332,8 @@ void loop()
       Serial.println("Sensor 1 triggered!");
       senTimeout.restart();
       senTriggered = true;
-      currentSensor = 1;      
+      currentSensor = 1;   
+      gameTimeout.setTime(gameTime);   
     }
 
     if(detect2 && !senTimeout.running())
@@ -335,7 +343,8 @@ void loop()
       Serial.println("Sensor 2 triggered!");
       senTimeout.restart();
       senTriggered = true;
-      currentSensor = 2;      
+      currentSensor = 2;   
+      gameTimeout.setTime(gameTime);   
     }
 
     if(detect3 && !senTimeout.running())
@@ -346,6 +355,7 @@ void loop()
       senTimeout.restart();
       senTriggered = true;
       currentSensor = 3;
+      gameTimeout.setTime(gameTime);
     }
 
     if(detect4 && !senTimeout.running())
@@ -356,6 +366,7 @@ void loop()
       senTimeout.restart();
       senTriggered = true;
       currentSensor = 4;
+      gameTimeout.setTime(gameTime);
     }
 
     if(detect5 && !senTimeout.running())
@@ -366,6 +377,7 @@ void loop()
       senTimeout.restart();
       senTriggered = true;
       currentSensor = 5;
+      gameTimeout.setTime(gameTime);
     }
 
     if(exitDetect && !senTimeout.running() && currentSensor == 5)
@@ -376,6 +388,7 @@ void loop()
       senTimeout.restart();
       senTriggered = true;
       currentSensor = 7;
+      gameTimeout.setTime(gameTime);
     }
     
     //Check the direction and update lights
