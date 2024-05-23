@@ -250,14 +250,26 @@ void updateProgressbar(byte Section, bool on)
       if(on)
       {
         fill_solid(texture6, numPerSec,CHSV(217,255,255));
-        FastLED.show();
-        win();        
+        FastLED.show();       
       }else
       {
-        fill_solid(exitSection, numPerSec, CRGB::Black);
+        fill_solid(texture6, numPerSec, CRGB::Black);
         FastLED.show(); 
       }
     break;
+
+    case 7:
+    if(on)
+    {
+    fill_solid(exitSection, numPerSec,CHSV(255,255,255));
+    FastLED.show();
+    win();        
+    }else
+    {
+    fill_solid(exitSection, numPerSec, CRGB::Black);
+    FastLED.show(); 
+    }
+    break;  
 
   }
 
