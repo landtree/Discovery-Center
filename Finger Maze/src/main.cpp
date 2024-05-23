@@ -42,6 +42,9 @@ MoToTimer senTimeout,ledTimeout, gameTimeout,checkSensor,beat,winTimer;
 //create flags
 bool senTriggered,beaton,secOn;
 bool gameOn;
+
+bool detect1,detect2 ,detect3 ,detect4 ,detect5,detect6,exitDetect,easterEgg;  
+
 uint8_t lastSensor, currentSensor;
 
 int ledRain = 0;
@@ -75,7 +78,7 @@ void setup()
   //create led strip
   FastLED.addLeds<NEOPIXEL, leds_Pin>(leds, Num_leds).setCorrection( TypicalSMD5050 );
   //restricts brightness
-  FastLED.setMaxPowerInVoltsAndMilliamps(5, 2300);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 2000);
 
   Serial.begin(9600);
   //while(!Serial); turn of to wait to connect
@@ -244,19 +247,6 @@ void updateProgressbar(byte Section, bool on)
     case 6:
       if(on)
       {
-        fill_solid(texture6, numPerSec,CHSV(186,255,255));
-        FastLED.show();        
-      }else
-      {
-        fill_solid(texture6, numPerSec, CRGB::Black);
-        FastLED.show(); 
-      }
-
-    break;
-
-    case 7:
-      if(on)
-      {
         fill_solid(texture6, numPerSec,CHSV(217,255,255));
         FastLED.show();
         win();        
@@ -265,16 +255,12 @@ void updateProgressbar(byte Section, bool on)
         fill_solid(exitSection, numPerSec, CRGB::Black);
         FastLED.show(); 
       }
-
-
     break;
-
 
   }
 
 }
 
-bool detect1,detect2 ,detect3 ,detect4 ,detect5,detect6,exitDetect,easterEgg;  
 
 void loop() 
 {
@@ -368,14 +354,14 @@ void loop()
       currentSensor = 5;
     }
 
-    if(!detect6 && !senTimeout.running())
-    {
-      lastSensor = currentSensor;
-      Serial.println("Sensor 6 triggered!");
-      senTimeout.restart();
-      senTriggered = true;
-      currentSensor = 6;
-    }
+    // if(!detect6 && !senTimeout.running())
+    // {
+    //   lastSensor = currentSensor;
+    //   Serial.println("Sensor 6 triggered!");
+    //   senTimeout.restart();
+    //   senTriggered = true;
+    //   currentSensor = 6;
+    // }
 
     if(!exitDetect && !senTimeout.running() && lastSensor == 6)
     {
