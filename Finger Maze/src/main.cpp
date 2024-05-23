@@ -114,6 +114,7 @@ void reset()
 
 void win()
 {
+
 Serial.println("Win");
 winTimer.setTime(12000);
 fill_solid(leds,Num_leds,CRGB::Black);
@@ -374,7 +375,7 @@ void loop()
       Serial.println("Exit triggered!");
       senTimeout.restart();
       senTriggered = true;
-      currentSensor = 6;
+      currentSensor = 7;
     }
     
     //Check the direction and update lights
