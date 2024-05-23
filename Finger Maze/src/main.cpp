@@ -18,7 +18,7 @@
 //Led defintion for the full strip and break to sections
 #define leds_Pin 11
 #define Num_leds 60
-#define numPerSec round(Num_leds/6) //sets the strip into number of sensors and rounds to fix any decimals
+#define numPerSec round(Num_leds/8) //sets the strip into number of sensors and rounds to fix any decimals
 CRGB leds[Num_leds];
 
 
@@ -30,7 +30,7 @@ CRGB* texture3 = &leds[(numPerSec * 3)];
 CRGB* texture4 = &leds[(numPerSec * 4)]; 
 CRGB* texture5 = &leds[(numPerSec * 5)]; 
 CRGB* texture6 = &leds[(numPerSec * 6)]; 
-CRGB* exitSection = &leds[(numPerSec * 6)];
+CRGB* exitSection = &leds[(numPerSec * 7)];
 
 //create timers
 MoToTimer senTimeout,ledTimeout, gameTimeout,checkSensor,beat,winTimer;
@@ -276,20 +276,6 @@ void loop()
       Serial.print("Sensors trigging game start:");
       Serial.print(" Start:");
       Serial.print(startDetect);
-      // Serial.print("| 1:");
-      // Serial.print(detect1);      
-      // Serial.print("| 2:");
-      // Serial.print(detect2);   
-      // Serial.print("| 3:");
-      // Serial.print(detect3);   
-      // Serial.print("| 4:");
-      // Serial.print(detect4);   
-      // Serial.print("| 5:");
-      // Serial.print(detect5);   
-      // Serial.print("| Exit:");
-      // Serial.print(exitDetect);   
-      // Serial.print("| EE:");
-      // Serial.println(easterEgg);   
 
     if(startDetect)
     {
