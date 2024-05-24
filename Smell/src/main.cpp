@@ -1,53 +1,35 @@
 #include <define.h>
 
-int encodedScent = 000;
-int encodedImg = 000;
-
-int readScentIR(int encoded)
+int readScentIR(int encodedS)
 { 
   //reads the bool of each encode ring
   bool ir1 = digitalRead(encode1); 
   bool ir2 = digitalRead(encode2);
   bool ir3 = digitalRead(encode3);
 
-  if(ir1 || ir2 || ir3)
-  {
-    fanTimer.setTime(60000);
-  }
   //write the bits to update encoded signal
   bitWrite(encodedScent,0,ir1);
   bitWrite(encodedScent,1,ir2);
   bitWrite(encodedScent,2,ir3);
-  Serial.print("Scent:");
-  Serial.println(encodedScent);
-  delay(1000);
-  encoded = encodedScent;
-  return encoded;
+
+  encodedS = encodedScent;
+  return encodedS;
 }
 
-int readImgIR(int encoded)
+int readImgIR(int encodedI)
 {
   //reads the bool of each encode ring
   bool ir4 = digitalRead(encode4); 
   bool ir5 = digitalRead(encode5);
   bool ir6 = digitalRead(encode6);
 
-    if(ir4 || ir5 || ir6)
-  {
-    fanTimer.setTime(60000);
-  }
-
   //write the bits to update encoded signal
-  bitWrite(encodedImg,0,0);
-  bitWrite(encodedImg,1,0);
-  bitWrite(encodedImg,2,0);
+  bitWrite(encodedImg,0,ir4);
+  bitWrite(encodedImg,1,ir5);
+  bitWrite(encodedImg,2,ir6);
 
-  Serial.print("Image:");
-  Serial.println(encodedImg);
-  delay(1000);
-
-  encoded = encodedImg;
-  return encoded;
+  encodedI = encodedImg;
+  return encodedI;
 }
 
 
@@ -86,28 +68,51 @@ void setup() {
 
 }
 
+bool checkMatch(bool match)
+{
+  //Picture Wheel --> Smell Wheel
+  // 1 --> 3
+  // 2 --> 6
+  // 3 --> 2
+  // 4 --> 5 
+  // 5 --> 1
+  // 6 --> 7
+  // 7 --> 4
+
+  //assume match is false unless a below statement is true
+  match = false;
+
+  //true statements
+  if(encodedImg == img1 && encodedScent == scent3){match = true;}
+  if(encodedImg == img2 && encodedScent == scent6){match = true;}
+  if(encodedImg == img3 && encodedScent == scent2){match = true;}
+  if(encodedImg == img4 && encodedScent == scent5){match = true;}
+  if(encodedImg == img5 && encodedScent == scent1){match = true;}
+  if(encodedImg == img6 && encodedScent == scent7){match = true;}
+  if(encodedImg == img7 && encodedScent == scent4){match = true;}
+
+  Serial.print("match: ");
+  Serial.println(match);
+  
+  return match;
+
+}
+
 void printdebug()
 {
-
-  Serial.print("Fan Status: ");
-  if(fanOn == 1){Serial.println("Fan On");}else{Serial.println("Fan Off");}
-  delay(300);
-
   Serial.println("**********************");
-  encodedScent = readImgIR(encodedScent);
+  encodedScent = readScentIR(encodedScent);
   Serial.print("Scent Encoder: ");
   Serial.println(encodedScent);
-  delay(300);
   Serial.println("**********************");
-  encodedImg = readScentIR(encodedImg);
+
+  encodedImg = readImgIR(encodedImg);
   Serial.print("Image Encoder: ");
   Serial.println(encodedImg);
-  delay(300);
   Serial.println("**********************");
 
-  Serial.println("Button Pressed: ");
+  Serial.print("Button Pressed: ");
   if(startBtn.isPressed()){Serial.println("Pressed");}else{Serial.println("Not Pressed");}
-
 
 }
 
@@ -116,7 +121,11 @@ void loop()
 {
 
   #ifdef debug
-    printdebug();
+    if(!debugTimer.running())
+    {
+      printdebug();
+      debugTimer.setTime(1000);
+    }
   #endif
 
   startBtn.update();
@@ -127,19 +136,14 @@ void loop()
     encodedScent = readScentIR(encodedScent);
     //read the line breaks for the smells & encode
     encodedImg = readImgIR(encodedImg);
-    //turn on fan and button timers
-    fanTimer.setTime(60000);
-    buttonTimer.setTime(400);
+    //check to see if a match was made
+    match = checkMatch(match);
+    //allow button reset button timer
+    buttonTimer.setTime(100);
   }
 
-  //run the fan for 1sec and then turn off
-  if(!fanTimer.running())
-  {
-    fanOn = !fanOn;
-    digitalWrite(fan,fanOn);
-  }
 
-  if(encodedScent == encodedImg)
+  if(match)
   {
     fill_solid(ring,numLeds,CRGB::Green);
   }else
