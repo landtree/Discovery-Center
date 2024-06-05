@@ -1,0 +1,150 @@
+#I would recomend a clean install.
+
+#Use the raspberry pi imager.( https://www.raspberrypi.com/software/ ) It makes getting the correct image easier also lets you preconfigure wifi & ssh
+
+#I would do most of this from SSH, aside from copying the file
+
+#setup needs
+sudo apt update
+sudo apt upgrade
+
+#this will take a hot min; go get some tea, and a sandwhich...depending how far out of date it is
+#but need the full update to pull latest python dependices, it took mine around ~30-45mins
+#but im using a cheap SD card
+
+#This is optional but HIGHLY recomend doing it if you haven't ran
+#these in awhile. It helps with stability issues!
+sudo rpi-update
+sudo reboot
+
+
+#before we install libraies we need to create a python enviorment
+#because that is just how it is now. :)
+
+#make sure you are in home
+cd
+python -m venv earnoise
+source earnoise/bin/activate
+
+sudo apt install libportaudio2
+
+pip3 install librosa
+pip3 install sounddevice
+pip3 install soundfile
+pip3 install numpy
+pip3 install rpi.gpio
+pip3 install lgpio
+pip3 install gpiozero
+pip3 install adafruit-circuitpython-seesaw
+
+
+#regular ol' setup
+sudo raspi-config
+set audio to audiojack (system options)
+enable i2c in interface options
+add any extra interface options (VNC)
+change hostname
+
+#this you could VNC into to copy off of a drive
+
+copy audio_player.py to Documents (this ensures it works with the venv)
+
+#we are going to make a .bashrc file later
+#this will auto run commands as soon as the pi user
+#logs into shell, we are going to set it to autologin
+#this also disables the desktop but can always be changed
+#but it can always be chagned back to autologin desktop
+
+set to autologin as pi to CLI (in System Options)
+
+#all done, leave raspi-config but do not reboot if asked
+
+#will setup autoboot next & set our usbdrive 
+
+#prereq
+#USB Format Fat/Fat32
+#the USB name needs to be AUDIO (I am not sure this actually matters)
+#All files must be WAV 
+#Expects 6 audio files located in ./
+#we can lower or increase that number, but will need to update dance.py
+#it is expecting the name format '1.wav' , '2.wav', etc...
+#We are going to manually mount it so it always is in the same location
+
+#plug in USB if you didn't do that yet
+
+cd
+lsblk
+
+#this is just to confirm the USB is 'sda'
+#I am going to assume it is
+#if it isn't change it to whatever matches(sdb, sdc, etc)
+
+sudo mkdir /media/pi/AUDIO
+#if you used the USB labeled audio this folder will already exist
+#but do both steps anyways
+sudo mount /dev/sda /media/pi/AUDIO
+
+
+
+#now to run our commands at bash login (shell, since we don't need the graphical overhead)
+cd
+sudo nano .bashrc
+
+#add these lines to the end of the file
+
+#this always mounts USB to the same file location
+sudo mount /dev/sda /media/pi/AUDIO
+
+#This activates python venv & boot script
+#this will also ensure if we SSH into the term
+#we will always enter the python venv and can just install and adjust
+source /home/pi/dancezone/bin/activate
+python3 /home/pi/Documents/audio_player.py
+
+ctrl + X to leave
+Y & Enter to save
+
+#now everthing should be set, but we need to wire
+#eveything up!
+
+#shutdown
+sudo shutdown -s now
+
+Wire the powerstrip relay to GPIO 14 and ground
+Attach audio jack
+
+#boot with USB in plugged in
+
+After full boot..
+
+# It should start playing once you press the button, it will only keep lights on for as long as the sound is.
+# With that being said, all the audio gets loaded into ram, so keep that in mind with whatever version of the pi
+# you are running as it will eat at the ram if the songs are SUPER long. if you want to do that, we need to 
+# access the audio in a differnt way, closer to how the ear works.
+
+# IF NOTHING HAPPENS!!! We need to login VIA ssh and the script will start and instantly output any errors
+# Then we will go from there!
+
+## if you login and the lasst line of the error is GPIO busy, it means its already running.
+
+All pitch butttons are attached to the arcadeboards.
+The next audio button is attached to pin(4) & LED on pin(13) of the GPIO
+# Button Layout starting at top of pitch selection:
+# Arcade_1:
+# 0 - btn1:12
+# 1 - btn2:10
+# 2 - btn3:8
+# 3 - btn4:6
+# 
+# Arcade_2:
+# 4 - btn5:4
+# 5 - btn6:2
+# ------------- Middle of buttons
+# 6 - btn7:-2
+# 7 - btn8:-4
+# 
+# Arcade_3:
+# 8 - btn9:-6
+# 9 - btn10:-8
+# 10 - btn11:-10
+# 11 - btn12:-12

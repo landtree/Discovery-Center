@@ -12,15 +12,22 @@ from adafruit_seesaw.pwmout import PWMOut
 
 i2c = board.I2C()
 
+print("Sleep to give i2c a chance to link")
+sleep(2000)
+
 try:
     arcade_1 = Seesaw(i2c, addr=0x3A)
     arcade_2 = Seesaw(i2c, addr=0x3B)
     arcade_3 = Seesaw(i2c, addr=0x3C)
 except:
-    print("I2C did not connect, attempting again...")
-    arcade_1 = Seesaw(i2c, addr=0x3A)
-    arcade_2 = Seesaw(i2c, addr=0x3B)
-    arcade_3 = Seesaw(i2c, addr=0x3C)
+    try:
+        print("I2C did not connect, attempting again...")
+        arcade_1 = Seesaw(i2c, addr=0x3A)
+        arcade_2 = Seesaw(i2c, addr=0x3B)
+        arcade_3 = Seesaw(i2c, addr=0x3C)
+    except:
+        print("Failed to connect twice, exiting")
+        exit()
     
 
 arcade_group = (arcade_1, arcade_2, arcade_3)
@@ -45,6 +52,7 @@ arcade_group = (arcade_1, arcade_2, arcade_3)
 # 10 - btn11:-10
 # 11 - btn12:-12
 
+
 #setup buttons
 #(1,2,3,4)
 button_pins = (18, 19, 20, 2)
@@ -67,17 +75,18 @@ for arcade_led in arcade_group:
 
 
 #load sounds files
-sound1 = '/home/ear/Documents/audio/1.wav'
-sound2 = '/home/ear/Documents/audio/2.wav'
-sound3 = '/home/ear/Documents/audio/3.wav'
-sound4 = '/home/ear/Documents/audio/4.wav'
-sound5 = '/home/ear/Documents/audio/5.wav'
-sound6 = '/home/ear/Documents/audio/6.wav'
+sound1 = '/media/pi/AUDIO/1.wav'
+sound2 = '/media/pi/AUDIO/2.wav'
+sound3 = '/media/pi/AUDIO/3.wav'
+sound4 = '/media/pi/AUDIO/4.wav'
+sound5 = '/media/pi/AUDIO/5.wav'
+sound6 = '/media/pi/AUDIO/6.wav'
 
 #configure gpio button & led
 switchAudio = Button(4)
 swLED = PWMLED(13)
 
+#load audio into ram
 a1, sr1 = librosa.load(sound1)
 print("Loaded 1")
 a2, sr2 = librosa.load(sound2)
@@ -91,65 +100,16 @@ print("Loaded 5")
 a6, sr6 = librosa.load(sound6)
 print("Loaded 6")
 
-
-global currentAud
-global currentSr
-global audioPos
+##create and load vars
+audioPos = 0
 currentAud = a1
 currentSr = sr1
-audioPos = 1
+
 step = 0
 playOnce = False
 
 HIGH = 65534
 LOW = 0
-
-
-#pass audio and pitch amount
-def pitch (currentAud, currentSr, pitchStep):
-    Pitched = librosa.effects.pitch_shift(currentAud, sr=currentSr, n_steps=pitchStep)
-    sd.play(Pitched, currentSr, blocking =False)
-    
-#step through the sounds    
-def changeSound(audioPos):
-    print("Current Audio: " + str(audioPos))
-    match audioPos:
-        case 0:
-            #sd.stop()
-            currentAud = a1
-            currentSr = sr1
-            sd.play(currentAud, currentSr, blocking =False)
-            return currentAud, currentSr
-        case 1:
-            #sd.stop()            
-            currentAud = a2
-            currentSr = sr2
-            sd.play(currentAud, currentSr, blocking =False)
-            return currentAud, currentSr
-        case 2:
-            #sd.stop()            
-            currentAud = a3
-            currentSr = sr3
-            sd.play(currentAud, currentSr, blocking =False)
-            return currentAud, currentSr
-        case 3:
-            #sd.stop()            
-            currentAud = a4
-            currentSr = sr4
-            sd.play(currentAud, currentSr, blocking =False)
-            return currentAud, currentSr
-        case 4:
-            #sd.stop()            
-            currentAud = a5
-            currentSr = sr5
-            sd.play(currentAud, currentSr, blocking =False)
-            return currentAud, currentSr
-        case 5:
-            #sd.stop()            
-            currentAud = a6
-            currentSr = sr6
-            sd.play(currentAud, currentSr, blocking =False)
-            return currentAud, currentSr
 
 timeout = 0.75
 lastTime = 0
@@ -157,21 +117,73 @@ LedTimer = 0.05
 lastLed = 0
 ledVal = 0
 forward = True
+
+
+
+#pass audio and pitch amount
+def pitch (currentAud, currentSr, pitchStep):
+    Pitched = librosa.effects.pitch_shift(currentAud, sr=currentSr, n_steps=pitchStep)
+    sd.play(Pitched, currentSr, blocking =False)
+
+
+#step through the sounds when button is pressed    
+def changeSound(audPos,curAud, curSr):
+    print("Current Audio: " + str(audPos))
+    
+    match audPos:
+        case 0:
+            #sd.stop()
+            curAud = a1
+            curSr = sr1
+            sd.play(curAud, curSr, blocking =False)
+            return curAud, curSr
+        case 1:
+            #sd.stop()            
+            curAud = a2
+            curSr = sr2
+            sd.play(curAud, curSr, blocking =False)
+            return curAud, curSr
+        case 2:
+            #sd.stop()            
+            curAud = a3
+            curSr = sr3
+            sd.play(curAud, curSr, blocking =False)
+            return curAud, curSr
+        case 3:
+            #sd.stop()            
+            curAud = a4
+            curSr = sr4
+            sd.play(curAud, curSr, blocking =False)
+            return curAud, curSr
+        case 4:
+            #sd.stop()            
+            curAud = a5
+            curSr = sr5
+            sd.play(curAud, curSr, blocking =False)
+            return curAud, curSr
+        case 5:
+            #sd.stop()            
+            curAud = a6
+            curSr = sr6
+            sd.play(curAud, curSr, blocking =False)
+            return curAud, curSr
+
+
 #Loop loop loooooop
 while True:
     
-    #switch audio is attach via GPIO
+    #track time to lock switchAudio for small amount of time
     currentTime = time.time()
     
+    #Switch audio tracks and swap around vars
     if switchAudio.is_pressed and timeout < (currentTime-lastTime):
         lastTime = currentTime
         audioPos += 1
-        
-        
         if audioPos == 6:
             print("Audio Pos above 6: " + str(audioPos))
             audioPos = 0
-        currentAud, currentSr = changeSound(audioPos)
+            
+        currentAud, currentSr = changeSound(audioPos,currentAud,currentSr)
         
     #pulse swAud Light
     if LedTimer < (currentTime - lastLed):
