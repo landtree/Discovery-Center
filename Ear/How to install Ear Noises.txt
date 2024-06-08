@@ -27,17 +27,25 @@ python -m venv earnoise
 source earnoise/bin/activate
 
 sudo apt install libportaudio2
+sudo apt install i2c-tools
 
 pip3 install librosa
+
+#These should have gotten installed from librosa
 pip3 install sounddevice
 pip3 install soundfile
 pip3 install numpy
+
+pip3 install rpi.gpio lgpio gpiozero adafruit-circuitpython-seesaw
+
+#incase the single line does not work
 pip3 install rpi.gpio
 pip3 install lgpio
 pip3 install gpiozero
 pip3 install adafruit-circuitpython-seesaw
 
 
+(scan i2c: sudo i2cdetect -y 1)
 #regular ol' setup
 sudo raspi-config
 set audio to audiojack (system options)
