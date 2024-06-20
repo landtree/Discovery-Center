@@ -93,7 +93,7 @@ lsblk
 sudo mkdir /media/pi/AUDIO
 #if you used the USB labeled audio this folder will already exist
 #but do both steps anyways
-sudo mount /dev/sda/media/pi/AUDIO
+sudo mount /dev/sda /media/pi/AUDIO
 
 #now to run our commands at bash login (shell, since we don't need the graphical overhead)
 cd

@@ -13,7 +13,7 @@ from adafruit_seesaw.pwmout import PWMOut
 i2c = board.I2C()
 
 print("Sleep to give i2c a chance to link")
-sleep(2000)
+time.sleep(2000)
 
 try:
     arcade_1 = Seesaw(i2c, addr=0x3A)
