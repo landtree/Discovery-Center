@@ -2,6 +2,10 @@
 
 #Use the raspberry pi imager.( https://www.raspberrypi.com/software/ ) It makes getting the correct image easier also lets you preconfigure wifi & ssh
 
+##These instructions make the assumption that the default username of 'pi'
+##will be used. Adjust accordingly. 
+
+
 #I would do most of this from SSH, aside from copying the file
 
 #setup needs
@@ -16,7 +20,6 @@ sudo apt upgrade
 #these in awhile. It helps with stability issues!
 sudo rpi-update
 sudo reboot
-
 
 #before we install libraies we need to create a python enviorment
 #because that is just how it is now. :)
