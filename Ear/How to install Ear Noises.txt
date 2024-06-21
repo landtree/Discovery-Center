@@ -2,6 +2,10 @@
 
 #Use the raspberry pi imager.( https://www.raspberrypi.com/software/ ) It makes getting the correct image easier also lets you preconfigure wifi & ssh
 
+##These instructions make the assumption that the default username of 'pi'
+##will be used. Adjust accordingly. 
+
+
 #I would do most of this from SSH, aside from copying the file
 
 #setup needs
@@ -16,7 +20,6 @@ sudo apt upgrade
 #these in awhile. It helps with stability issues!
 sudo rpi-update
 sudo reboot
-
 
 #before we install libraies we need to create a python enviorment
 #because that is just how it is now. :)
@@ -92,8 +95,6 @@ sudo mkdir /media/pi/AUDIO
 #but do both steps anyways
 sudo mount /dev/sda /media/pi/AUDIO
 
-
-
 #now to run our commands at bash login (shell, since we don't need the graphical overhead)
 cd
 sudo nano .bashrc
@@ -106,7 +107,7 @@ sudo mount /dev/sda /media/pi/AUDIO
 #This activates python venv & boot script
 #this will also ensure if we SSH into the term
 #we will always enter the python venv and can just install and adjust
-source /home/pi/dancezone/bin/activate
+source /home/pi/earnoise/bin/activate
 python3 /home/pi/Documents/audio_player.py
 
 ctrl + X to leave
@@ -118,17 +119,11 @@ Y & Enter to save
 #shutdown
 sudo shutdown -s now
 
-Wire the powerstrip relay to GPIO 14 and ground
-Attach audio jack
-
 #boot with USB in plugged in
 
 After full boot..
 
-# It should start playing once you press the button, it will only keep lights on for as long as the sound is.
-# With that being said, all the audio gets loaded into ram, so keep that in mind with whatever version of the pi
-# you are running as it will eat at the ram if the songs are SUPER long. if you want to do that, we need to 
-# access the audio in a differnt way, closer to how the ear works.
+# It should responde to button presses at this point. Give it about a min to boot. 
 
 # IF NOTHING HAPPENS!!! We need to login VIA ssh and the script will start and instantly output any errors
 # Then we will go from there!
