@@ -13,7 +13,7 @@ from adafruit_seesaw.pwmout import PWMOut
 i2c = board.I2C()
 
 print("Sleep to give i2c a chance to link")
-sleep(2000)
+time.sleep(2)
 
 try:
     arcade_1 = Seesaw(i2c, addr=0x3A)
@@ -122,6 +122,7 @@ forward = True
 
 #pass audio and pitch amount
 def pitch (currentAud, currentSr, pitchStep):
+    print(currentSr)
     Pitched = librosa.effects.pitch_shift(currentAud, sr=currentSr, n_steps=pitchStep)
     sd.play(Pitched, currentSr, blocking =False)
 
@@ -184,6 +185,7 @@ while True:
             audioPos = 0
             
         currentAud, currentSr = changeSound(audioPos,currentAud,currentSr)
+        print(currentSr)
         
     #pulse swAud Light
     if LedTimer < (currentTime - lastLed):

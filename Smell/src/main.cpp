@@ -82,13 +82,25 @@ bool checkMatch(bool match)
   //assume match is false unless a below statement is true
   match = false;
 
+  //fire img/smell  
+  //     110/101 (6/5)
+
+  //coff img/smell 
+  //     101/000 (5/0)
+
+  //fire
+  if(encodedImg == img6 && encodedScent == scent5){match = true;}
+  //coffee
+  if(encodedImg == img5 && encodedScent == noScent){match = true;}
+
   //true statements
   if(encodedImg == img1 && encodedScent == scent3){match = true;}
   if(encodedImg == img2 && encodedScent == scent6){match = true;}
   if(encodedImg == img3 && encodedScent == scent2){match = true;}
   if(encodedImg == img4 && encodedScent == scent5){match = true;}
-  if(encodedImg == img5 && encodedScent == scent1){match = true;}
-  if(encodedImg == img6 && encodedScent == scent7){match = true;}
+  
+  // old coffee = if(encodedImg == img5 && encodedScent == scent1){match = true;}
+  // old fire = if(encodedImg == img6 && encodedScent == scent7){match = true;}
   if(encodedImg == img7 && encodedScent == scent4){match = true;}
 
   Serial.print("match: ");
