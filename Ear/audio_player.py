@@ -8,7 +8,6 @@ import board
 import digitalio
 from adafruit_seesaw.seesaw import Seesaw
 from adafruit_seesaw.digitalio import DigitalIO
-from adafruit_seesaw.pwmout import PWMOut
 
 i2c = board.I2C()
 
@@ -17,15 +16,15 @@ time.sleep(2)
 
 try:
     arcade_1 = Seesaw(i2c, addr=0x3A)
-    ##arcade_2 = Seesaw(i2c, addr=0x3B)
-    ##arcade_3 = Seesaw(i2c, addr=0x3C)
+    arcade_2 = Seesaw(i2c, addr=0x3B)
+    arcade_3 = Seesaw(i2c, addr=0x3C)
 except Exception as e:
     try:
         print("I2C did not connect, attempting again...")
         print("Error: " + e)
         arcade_1 = Seesaw(i2c, addr=0x3A)
-        ##arcade_2 = Seesaw(i2c, addr=0x3B)
-        ##arcade_3 = Seesaw(i2c, addr=0x3C)
+        arcade_2 = Seesaw(i2c, addr=0x3B)
+        arcade_3 = Seesaw(i2c, addr=0x3C)
     except Exception as e:
         print("Failed to connect twice, exiting.")
         print("Error: " + e)
@@ -59,25 +58,23 @@ print("set button pins")
 #(1,2,3,4)
 button_pins = (18, 19, 20, 2)
 buttons = []
-# for arcade_btn in arcade_group:
-
-for button_pin in button_pins:
-    #button = DigitalIO(arcade_btn, button_pin)
-    button = DigitalIO(arcade_1, button_pin)
-    button.direction = digitalio.Direction.INPUT
-    button.pull = digitalio.Pull.UP
-    buttons.append(button)
+for arcade_btn in arcade_group:
+    for button_pin in button_pins:
+        button = DigitalIO(arcade_btn, button_pin)
+        button.direction = digitalio.Direction.INPUT
+        button.pull = digitalio.Pull.UP
+        buttons.append(button)
 
 print("set led pins")
 #setup LEDs
 #(1,2,3,4)        
 led_pins = (12, 13, 0, 1)
 leds = []
-#for arcade_led in arcade_1:
-for led_pin in led_pins:
-    #led = PWMOut(arcade_led, led_pin)
-    led = PWMOut(arcade_1, led_pin)
-    leds.append(led)       
+for arcade_led in arcade_1:
+    for led_pin in led_pins:
+        led = DigitalIO(arcade_led, led_pin)
+        led.direction = digitalio.Direction.OUTPUT
+        leds.append(led)       
 
 
 #load sounds files
@@ -90,7 +87,7 @@ sound6 = '/media/pi/AUDIO/6.wav'
 
 #configure gpio button & led
 switchAudio = Button(4)
-swLED = PWMLED(13)
+swLED = PWMLED(13, frequency=1000)
 
 print("Attempting to load audio...")
 
@@ -150,7 +147,7 @@ playOnce = False
 
 timeout = 0.75
 lastTime = 0
-LedTimer = 0.05
+LedTimer = 0.01
 lastLed = 0
 ledVal = 0
 forward = True
@@ -161,9 +158,12 @@ forward = True
 def pitch (currentAud, currentSr, pitchStep):
     print("Audio array: " + str(currentAud))
     print("Audio rate: " + str(currentSr))
-    Pitched = librosa.effects.pitch_shift(currentAud, sr=currentSr, n_steps=pitchStep)
-    sd.play(Pitched, currentSr, blocking =True)
-
+    try:
+        Pitched = librosa.effects.pitch_shift(currentAud, sr=currentSr, n_steps=pitchStep)
+        sd.play(Pitched, currentSr, blocking =False)
+    except Exception as e:
+        print("Audio failed!")
+        print("Error" + e)
 
 #step through the sounds when button is pressed    
 def changeSound(audPos,curAud, curSr):
@@ -210,8 +210,11 @@ def changeSound(audPos,curAud, curSr):
 
 #Loop loop loooooop
 while True:
-    leds[1].value = True
-    leds[0].value = False
+    #this controls the led buttons lights.
+    #flip the logic if you want them to respond in the 
+    #oppisite way.
+    off = False
+    on = True
     
     #track time to lock switchAudio for small amount of time
     currentTime = time.time()
@@ -228,138 +231,139 @@ while True:
         currentAud, currentSr = changeSound(audioPos,currentAud,currentSr)
 
     #pulse swAud Light
+
     if LedTimer < (currentTime - lastLed):
         lastLed = currentTime
         if forward:
-            ledVal += 0.1
-            if ledVal == 1.0:
+            ledVal += 1
+            if ledVal == 100:
                 forward = False
         else:
-            ledVal -= 0.1
-            if ledVal == 0.1:
+            ledVal -= 1
+            if ledVal == 0:
                 forward = True            
-        ledVal = round(ledVal, 1)
-        swLED.value = ledVal
+        #ledVal = round(ledVal, 1)
+        swLED.value = ledVal/100
         
     #Pitch buttons are attached via I2C boards
 #-------Start Pitch Shift Up-----------        
     if not buttons[0].value:
         print("Button 1 value: " + str(buttons[0].value))
         #shut leds off
-        #for leds_num, discard in enumerate(leds):
-          #  leds[leds_num].value = button.value
+        for leds_num, discard in enumerate(leds):
+            leds[leds_num].value = off
         #turn on current led button
-        
+        leds[0].value = on        
         #pass pitch and play
-        pitch(currentAud, currentSr, -12)
+        pitch(currentAud, currentSr, 12)
 
     if not buttons[1].value:
-        print("Button 2")
+        print("Button 2 value: " + str(buttons[1].value))
         #shut leds off
         for leds_num, discard in enumerate(leds):
-            leds[leds_num].duty_cycle = LOW
+            leds[leds_num].value = off
         #turn on current led button
-        leds[1].duty_cycle = HIGH
+        leds[1].value = on
         #pass pitch and play
         pitch(currentAud, currentSr, 10)
 
     if not buttons[2].value:
-        print("Button 3")
+        print("Button 3 value: " + str(buttons[2].value)
         #shut leds off
         for leds_num, discard in enumerate(leds):
-            leds[leds_num].duty_cycle = LOW
+            leds[leds_num].value = off
         #turn on current led button
-        leds[2].duty_cycle = HIGH
+        leds[2].value = on
         #pass pitch and play
         pitch(currentAud, currentSr, 8)
         
     if not buttons[3].value:
-        print("Button 4")
+        print("Button 4 value: " + str(buttons[3].value)
         #shut leds off
         for leds_num, discard in enumerate(leds):
-            leds[leds_num].duty_cycle = LOW
+            leds[leds_num].value = off
         #turn on current led button
-        leds[3].duty_cycle = HIGH
+        leds[3].value = on
         #pass pitch and play
         pitch(currentAud, currentSr, 6)
-#         
-#     if not buttons[4].value:
-#         print("Button 5")
-#         #shut leds off
-#         for leds_num, discard in enumerate(leds):
-#             leds[leds_num].duty_cycle = LOW
-#         #turn on current led button
-#         leds[4].duty_cycle = HIGH
-#         #pass pitch and play
-#         pitch(currentAud, currentSr, 4)
-#         
-#     if not buttons[5].value:
-#         print("Button 6")
-#         #shut leds off
-#         for leds_num, discard in enumerate(leds):
-#             leds[leds_num].duty_cycle = LOW
-#         #turn on current led button
-#         leds[5].duty_cycle = HIGH
-#         #pass pitch and play
-#         pitch(currentAud, currentSr, 2)
-#         
-# #-------Start Pitch Shift Down-----------
-#     if not buttons[6].value:
-#         print("Button 7")
-#         #shut leds off
-#         for leds_num, discard in enumerate(leds):
-#             leds[leds_num].duty_cycle = LOW
-#         #turn on current led button
-#         leds[6].duty_cycle = HIGH
-#         #pass pitch and play
-#         pitch(currentAud, currentSr, -2)
-# 
-#     if not buttons[7].value:
-#         print("Button 8")
-#         #shut leds off
-#         for leds_num, discard in enumerate(leds):
-#             leds[leds_num].duty_cycle = LOW
-#         #turn on current led button
-#         leds[7].duty_cycle = HIGH
-#         #pass pitch and play
-#         pitch(currentAud, currentSr, -4)
-#         
-#     if not buttons[8].value:
-#         print("Button 9")
-#         #shut leds off
-#         for leds_num, discard in enumerate(leds):
-#             leds[leds_num].duty_cycle = LOW
-#         #turn on current led button
-#         leds[8].duty_cycle = HIGH
-#         #pass pitch and play
-#         pitch(currentAud, currentSr, -6)
-#         
-#     if not buttons[9].value:
-#         print("Button 10")
-#         #shut leds off
-#         for leds_num, discard in enumerate(leds):
-#             leds[leds_num].duty_cycle = LOW
-#         #turn on current led button
-#         leds[9].duty_cycle = HIGH
-#         #pass pitch and play
-#         pitch(currentAud, currentSr, -8)
-#         
-#     if not buttons[10].value:
-#         print("Button 11")
-#         #shut leds off
-#         for leds_num, discard in enumerate(leds):
-#             leds[leds_num].duty_cycle = LOW
-#         #turn on current led button
-#         leds[10].duty_cycle = HIGH
-#         #pass pitch and play
-#         pitch(currentAud, currentSr, -10)
-#         
-#     if not buttons[11].value:
-#         print("Button 12")
-#         #shut leds off
-#         for leds_num, discard in enumerate(leds):
-#             leds[leds_num].duty_cycle = LOW
-#         #turn on current led button
-#         leds[11].duty_cycle = HIGH
-#         #pass pitch and play
-#         pitch(currentAud, currentSr, -12)
+        
+    if not buttons[4].value:
+        print("Button 5 value: " + str(buttons[4].value)
+        #shut leds off
+        for leds_num, discard in enumerate(leds):
+            leds[leds_num].value = off
+        #turn on current led button
+        leds[4].value = on
+        #pass pitch and play
+        pitch(currentAud, currentSr, 4)
+        
+    if not buttons[5].value:
+        print("Button 6 value: " + str(buttons[5].value)
+        #shut leds off
+        for leds_num, discard in enumerate(leds):
+            leds[leds_num].value = off
+        #turn on current led button
+        leds[5].value = on
+        #pass pitch and play
+        pitch(currentAud, currentSr, 2)
+        
+#-------Start Pitch Shift Down-----------
+    if not buttons[6].value:
+        print("Button 7 value: " + str(buttons[6].value)
+        #shut leds off
+        for leds_num, discard in enumerate(leds):
+            leds[leds_num].value = off
+        #turn on current led button
+        leds[6].value = on
+        #pass pitch and play
+        pitch(currentAud, currentSr, -2)
+
+    if not buttons[7].value:
+        print("Button 8 value: " + str(buttons[7].value)
+        #shut leds off
+        for leds_num, discard in enumerate(leds):
+            leds[leds_num].value = off
+        #turn on current led button
+        leds[7].value = on
+        #pass pitch and play
+        pitch(currentAud, currentSr, -4)
+        
+    if not buttons[8].value:
+        print("Button 9 value: " + str(buttons[8].value)
+        #shut leds off
+        for leds_num, discard in enumerate(leds):
+            leds[leds_num].value = off
+        #turn on current led button
+        leds[8].value = on
+        #pass pitch and play
+        pitch(currentAud, currentSr, -6)
+        
+    if not buttons[9].value:
+        print("Button 10 value: " + str(buttons[9].value)
+        #shut leds off
+        for leds_num, discard in enumerate(leds):
+            leds[leds_num].value = off
+        #turn on current led button
+        leds[9].value = on
+        #pass pitch and play
+        pitch(currentAud, currentSr, -8)
+        
+    if not buttons[10].value:
+        print("Button 11 value: " + str(buttons[10].value)
+        #shut leds off
+        for leds_num, discard in enumerate(leds):
+            leds[leds_num].value = off
+        #turn on current led button
+        leds[10].value = on
+        #pass pitch and play
+        pitch(currentAud, currentSr, -10)
+        
+    if not buttons[11].value:
+        print("Button 12 value: " + str(buttons[11].value)
+        #shut leds off
+        for leds_num, discard in enumerate(leds):
+            leds[leds_num].value = off
+        #turn on current led button
+        leds[11].value = on
+        #pass pitch and play
+        pitch(currentAud, currentSr, -12)
