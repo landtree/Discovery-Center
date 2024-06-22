@@ -3,7 +3,7 @@
 #Use the raspberry pi imager.( https://www.raspberrypi.com/software/ ) It makes getting the correct image easier also lets you preconfigure wifi & ssh
 
 ##These instructions make the assumption that the default username of 'pi'
-##will be used. Adjust accordingly. 
+##will be used. Adjust accordingly. IE. /home/pi = /home/username
 
 
 #I would do most of this from SSH, aside from copying the file
@@ -37,7 +37,7 @@ pip3 install librosa
 #These should have gotten installed from librosa
 pip3 install sounddevice
 pip3 install soundfile
-pip3 install numpy
+pip install numpy==1.26.4
 
 pip3 install rpi.gpio lgpio gpiozero adafruit-circuitpython-seesaw
 

@@ -3,6 +3,8 @@
 #Use the raspberry pi imager.( https://www.raspberrypi.com/software/ ) It makes getting the correct image easier also lets you preconfigure wifi & ssh
 
 #I would do most of this from SSH, aside from copying the file
+##These instructions make the assumption that the default username of 'pi'
+##will be used. Adjust accordingly. IE. /home/pi = /home/username
 
 #setup needs
 sudo apt update
