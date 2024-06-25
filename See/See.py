@@ -29,9 +29,14 @@ def simulate_nearsightedness(frame):
     return blurred_frame
 
 def show_webcam_fullscreen():
-    cv2.namedWindow('video', cv2.WND_PROP_FULLSCREEN)
-    cv2.setWindowProperty('video', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-    cap = cv2.VideoCapture(0)
+    try:
+        #cv2.namedWindow('video', cv2.WND_PROP_FULLSCREEN)
+        #cv2.setWindowProperty('video', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+        cv2.namedWindow('video')
+        cap = cv2.VideoCapture(0)
+    except Exception as e:
+        print("Failed to create window or video Capture.")
+        print(e)
 
     if not cap.isOpened():
         print("Cannot open camera")
@@ -40,26 +45,39 @@ def show_webcam_fullscreen():
     current_filter = 'Nearsightedness'
 
     while True:
-        ret, frame = cap.read()
+        try:
+            ret, frame = cap.read()
+        except:
+            print("Failed to get frame")
+
         if not ret:
             print("Can't receive frame (stream end?). Exiting ...")
             break
-
+        
         key = cv2.waitKey(1)
-        if key == ord('a'):
-            current_filter = 'Grayscale'
-        elif key == ord('s'):
-            current_filter = 'Nearsightedness'
-        elif key == ord('d'):
-            current_filter = 'Gaussian Blur'
-        elif key == ord('f'):
-            current_filter = 'Color Blindness'
-        elif key == ord('g'):
-            current_filter = 'Tritanopia'
-        elif key == ord('h'):
-            current_filter = 'Protanopia'
-        elif key == ord('q'):
-            break
+        #clear out string var
+        newKey = ""
+        
+        if(key != -1):
+            print("Recieved: " + chr(key))
+            newKey = chr(key)
+            #force to lowercase to accept any input
+            newKey = newKey.lower()
+        #only process if a key is pressed & convert rather than check constantly.
+            if newKey == "a":
+                current_filter = 'Grayscale'
+            elif newKey == "s":
+                current_filter = 'Nearsightedness'
+            elif newKey == "d":
+                current_filter = 'Gaussian Blur'
+            elif newKey == "f":
+                current_filter = 'Color Blindness'
+            elif newKey == "g":
+                current_filter = 'Tritanopia'
+            elif newKey == "h":
+                current_filter = 'Protanopia'
+            elif newKey == "q":
+                break
 
         # Apply the selected filter
         if current_filter == 'Grayscale':
