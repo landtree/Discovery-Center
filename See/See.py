@@ -30,9 +30,8 @@ def simulate_nearsightedness(frame):
 
 def show_webcam_fullscreen():
     try:
-        #cv2.namedWindow('video', cv2.WND_PROP_FULLSCREEN)
-        #cv2.setWindowProperty('video', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        cv2.namedWindow('video')
+        cv2.namedWindow('video', cv2.WND_PROP_FULLSCREEN)
+        cv2.setWindowProperty('video', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
         cap = cv2.VideoCapture(0)
     except Exception as e:
         print("Failed to create window or video Capture.")
