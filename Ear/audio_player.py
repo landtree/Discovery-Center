@@ -70,11 +70,11 @@ print("set led pins")
 #(1,2,3,4)        
 led_pins = (12, 13, 0, 1)
 leds = []
-for arcade_led in arcade_1:
+for arcade_led in arcade_group:
     for led_pin in led_pins:
         led = DigitalIO(arcade_led, led_pin)
         led.direction = digitalio.Direction.OUTPUT
-        leds.append(led)       
+        leds.append(led) 
 
 
 #load sounds files
@@ -106,7 +106,7 @@ try:
 
 except Exception as e:
     print("failed to load Audio 1")
-    print("reason: " + e)
+    print("reason: " + str(e))
     
 try:
     print("Loading Audio 2")
@@ -114,35 +114,35 @@ try:
 
 except Exception as e:
     print("failed to load Audio 2")
-    print("reason: " + e)
+    print("reason: " + str(e))
 
 try:
     print("Loading Audio 3")    
     a3, sr3 = librosa.load(sound3,sr=None)
 except Exception as e:
     print("failed to load Audio 3")
-    print("reason: " + e)
+    print("reason: " + str(e))
 
 try:
     print("Loading Audio 4")    
     a4, sr4 = librosa.load(sound4,sr=None)
 except Exception as e:
     print("failed to load Audio 4")
-    print("reason: " + e)
+    print("reason: " + str(e))
 
 try:
     print("Loading Audio 5")
     a5, sr5 = librosa.load(sound5,sr=None)
 except Exception as e:
     print("failed to load Audio 5")
-    print("reason: " + e)
+    print("reason: " + str(e))
 
 try:
     print("Loading Audio 6")
     a6, sr6 = librosa.load(sound6,sr=None)
 except Exception as e:
     print("failed to load Audio 6")
-    print("reason: " + e)
+    print("reason: " + str(e))
 
 ##create and load vars
 audioPos = 0
@@ -171,7 +171,7 @@ def pitch (currentAud, currentSr, pitchStep):
         sd.play(Pitched, currentSr, blocking =False)
     except Exception as e:
         print("Audio failed!")
-        print("Error" + e)
+        print("Error" + str(e))
 
 #step through the sounds when button is pressed    
 def changeSound(audPos,curAud, curSr):
