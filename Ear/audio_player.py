@@ -85,6 +85,14 @@ sound4 = '/media/pi/AUDIO/4.wav'
 sound5 = '/media/pi/AUDIO/5.wav'
 sound6 = '/media/pi/AUDIO/6.wav'
 
+#Body shop version
+# sound1 = '/media/bodyshop/AUDIO/1.wav'
+# sound2 = '/media/bodyshop/AUDIO/2.wav'
+# sound3 = '/media/bodyshop/AUDIO/3.wav'
+# sound4 = '/media/bodyshop/AUDIO/4.wav'
+# sound5 = '/media/bodyshop/AUDIO/5.wav'
+# sound6 = '/media/bodyshop/AUDIO/6.wav'
+
 #configure gpio button & led
 switchAudio = Button(4)
 swLED = PWMLED(13, frequency=1000)
@@ -268,7 +276,7 @@ while True:
         pitch(currentAud, currentSr, 10)
 
     if not buttons[2].value:
-        print("Button 3 value: " + str(buttons[2].value)
+        print("Button 3 value: " + str(buttons[2].value))
         #shut leds off
         for leds_num, discard in enumerate(leds):
             leds[leds_num].value = off
@@ -278,7 +286,7 @@ while True:
         pitch(currentAud, currentSr, 8)
         
     if not buttons[3].value:
-        print("Button 4 value: " + str(buttons[3].value)
+        print("Button 4 value: " + str(buttons[3].value))
         #shut leds off
         for leds_num, discard in enumerate(leds):
             leds[leds_num].value = off
@@ -288,7 +296,7 @@ while True:
         pitch(currentAud, currentSr, 6)
         
     if not buttons[4].value:
-        print("Button 5 value: " + str(buttons[4].value)
+        print("Button 5 value: " + str(buttons[4].value))
         #shut leds off
         for leds_num, discard in enumerate(leds):
             leds[leds_num].value = off
@@ -298,7 +306,7 @@ while True:
         pitch(currentAud, currentSr, 4)
         
     if not buttons[5].value:
-        print("Button 6 value: " + str(buttons[5].value)
+        print("Button 6 value: " + str(buttons[5].value))
         #shut leds off
         for leds_num, discard in enumerate(leds):
             leds[leds_num].value = off
@@ -309,7 +317,7 @@ while True:
         
 #-------Start Pitch Shift Down-----------
     if not buttons[6].value:
-        print("Button 7 value: " + str(buttons[6].value)
+        print("Button 7 value: " + str(buttons[6].value))
         #shut leds off
         for leds_num, discard in enumerate(leds):
             leds[leds_num].value = off
@@ -319,7 +327,7 @@ while True:
         pitch(currentAud, currentSr, -2)
 
     if not buttons[7].value:
-        print("Button 8 value: " + str(buttons[7].value)
+        print("Button 8 value: " + str(buttons[7].value))
         #shut leds off
         for leds_num, discard in enumerate(leds):
             leds[leds_num].value = off
@@ -329,7 +337,7 @@ while True:
         pitch(currentAud, currentSr, -4)
         
     if not buttons[8].value:
-        print("Button 9 value: " + str(buttons[8].value)
+        print("Button 9 value: " + str(buttons[8].value))
         #shut leds off
         for leds_num, discard in enumerate(leds):
             leds[leds_num].value = off
@@ -339,7 +347,7 @@ while True:
         pitch(currentAud, currentSr, -6)
         
     if not buttons[9].value:
-        print("Button 10 value: " + str(buttons[9].value)
+        print("Button 10 value: " + str(buttons[9].value))
         #shut leds off
         for leds_num, discard in enumerate(leds):
             leds[leds_num].value = off
@@ -349,7 +357,7 @@ while True:
         pitch(currentAud, currentSr, -8)
         
     if not buttons[10].value:
-        print("Button 11 value: " + str(buttons[10].value)
+        print("Button 11 value: " + str(buttons[10].value))
         #shut leds off
         for leds_num, discard in enumerate(leds):
             leds[leds_num].value = off
@@ -359,7 +367,7 @@ while True:
         pitch(currentAud, currentSr, -10)
         
     if not buttons[11].value:
-        print("Button 12 value: " + str(buttons[11].value)
+        print("Button 12 value: " + str(buttons[11].value))
         #shut leds off
         for leds_num, discard in enumerate(leds):
             leds[leds_num].value = off
