@@ -31,7 +31,7 @@ except Exception as e:
         exit()
     
 print("Connected to i2c!")
-#arcade_group = (arcade_1, arcade_2, arcade_3)
+arcade_group = (arcade_1, arcade_2, arcade_3)
 
 # Button Layout starting at top of pitch selection:
 # Arcade_1:
